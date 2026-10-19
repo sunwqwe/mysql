@@ -25,3 +25,5 @@ mysql学习
 <img width="644" height="384" alt="image" src="https://github.com/user-attachments/assets/f82b44b2-0347-4f52-ab19-4ad748f2ddfa" />
 
 <img width="1007" height="506" alt="image" src="https://github.com/user-attachments/assets/21a6c42b-41af-42d3-bdcd-8fd2e3993312" />
+
+<img width="1009" height="340" alt="image" src="https://github.com/user-attachments/assets/580bae2a-486a-4f71-be1f-6c6399981608" />
