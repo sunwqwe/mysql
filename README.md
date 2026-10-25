@@ -30,3 +30,4 @@ mysql学习
 
 <img width="1013" height="388" alt="image" src="https://github.com/user-attachments/assets/4fe6480a-5a7f-463a-b3e5-1a3ef2f1e6db" />
 
+<img width="612" height="439" alt="image" src="https://github.com/user-attachments/assets/9edcfdf7-6070-408f-9855-10b935205916" />
