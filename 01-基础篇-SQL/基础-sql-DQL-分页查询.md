@@ -1,0 +1,8 @@
+#分页查询
+#1.查询第一页员工数据，每页展示10条记录
+select * from emp limit 0,10;
+
+select * from emp limit 10;
+
+#2.查询第2页员工数据，每页展示10条记录--------->(页码-1）*页展示记录数
+select  * from emp limit 10,10;

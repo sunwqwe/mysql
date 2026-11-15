@@ -1,8 +1,0 @@
-insert into employee(id, workno, name, gender, age, idcard, entrydate) values  (1,'1','itcast','男',10,'12345678','2000-01-01');
-
-
-select * from employee;
-
-insert into employee values (5,'5','韦一关','男',10,'12345678','2005-01-01');
-
-insert into employee values (3,'3','韦一关','男',38,'12345678','2005-01-01'),(4,'4','刘敏','女',18,'12345678','2005-01-01');
