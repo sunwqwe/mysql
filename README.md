@@ -1,33 +1,52 @@
-# mysql
-mysql学习
+# MySQL 学习笔记
 
+> 基于【黑马程序员 MySQL 教程】持续更新 · 过程笔记用 md 记录，专题总结出 PDF
 
+## 📚 目录结构
 
-<img width="1027" height="516" alt="image" src="https://github.com/user-attachments/assets/f8ec0b6d-a8b7-46b0-85a1-75230a07a368" />
+| 目录 | 内容 |
+|---|---|
+| `00-环境搭建/` | MariaDB 远程开发环境文档（Arch 虚拟机 + IDEA 直连 + 故障排查手册） |
+| `01-基础篇-SQL/` | DDL / DML / DQL / 用户与权限管理 |
+| `02-基础篇-函数与约束/` | 字符串/数值/日期/流程函数；约束与外键 |
+| `03-基础篇-多表与事务/` | 内外连接、子查询、联合查询；事务操作 |
+| `04-进阶篇-索引/` | 索引概述、B+Tree、索引语法、失效场景 |
+| `05-进阶篇-优化与锁/` | SQL 优化、锁、MVCC（学习中） |
+| `06-进阶篇-日志与管理/` | 日志、备份、管理（待学习） |
+| `07-体系结构与存储引擎/` | 体系结构、存储引擎对比与选型、事务隔离级别实验 |
 
+## ✅ 学习进度
 
+### 基础篇
+- [x] DDL（数据库操作 / 表操作）
+- [x] DML（插入 / 更新删除）
+- [x] DQL（基础/条件/聚合/分组/排序/分页/执行顺序/案例）
+- [x] 函数（字符串 / 数值 / 日期 / 流程）
+- [x] 约束（六大约束 / 外键 / 删除更新行为）
+- [x] 多表查询（关系设计/内外连接/自连接/union/三类子查询/综合练习）
+- [x] 事务操作
+- [x] 用户与权限管理
 
-<img width="1033" height="454" alt="image" src="https://github.com/user-attachments/assets/fcdb8a80-18fe-4659-bd3c-cc87ecc42f6b" />
+### 进阶篇
+- [x] 体系结构
+- [x] 存储引擎（特点对比 / 选型）
+- [x] 事务隔离级别（含实验报告）
+- [x] 索引概述
+- [ ] B+Tree 结构详解
+- [ ] 索引语法与失效场景
+- [ ] SQL 优化
+- [ ] 视图 / 触发器 / 存储过程
+- [ ] 锁 / InnoDB(MVCC) / 日志
 
+## 📄 专题笔记（PDF 精华）
 
-<img width="772" height="387" alt="image" src="https://github.com/user-attachments/assets/69941f56-8f4f-4974-b06d-719e8d2a11f9" />
+1. [索引笔记（一）：索引概述](./04-进阶篇-索引/)
+2. [事务隔离级别实验报告](./07-体系结构与存储引擎/)
+3. [MySQL 体系结构](./07-体系结构与存储引擎/)
+4. [存储引擎对比与选择](./07-体系结构与存储引擎/)
+5. [MariaDB 远程开发环境搭建](./00-环境搭建/)
 
-<img width="1099" height="240" alt="image" src="https://github.com/user-attachments/assets/372b2ad4-6f0a-4a10-b68d-3a270da843f4" />
+## 🧪 实验环境
 
-<img width="779" height="291" alt="image" src="https://github.com/user-attachments/assets/aec586b6-4856-4e20-9632-35a6fc8cd9e9" />
-
-<img width="418" height="49" alt="image" src="https://github.com/user-attachments/assets/afe10256-29eb-4be1-be5d-8669df35cdea" />
-
-<img width="814" height="163" alt="image" src="https://github.com/user-attachments/assets/4f16c805-9200-42b4-947c-0b20eacedcee" />
-
-<img width="1010" height="426" alt="image" src="https://github.com/user-attachments/assets/f3a28920-54d4-4d06-806c-3d93ad98a26c" />
-
-<img width="644" height="384" alt="image" src="https://github.com/user-attachments/assets/f82b44b2-0347-4f52-ab19-4ad748f2ddfa" />
-
-<img width="1007" height="506" alt="image" src="https://github.com/user-attachments/assets/21a6c42b-41af-42d3-bdcd-8fd2e3993312" />
-
-<img width="1009" height="340" alt="image" src="https://github.com/user-attachments/assets/580bae2a-486a-4f71-be1f-6c6399981608" />
-
-<img width="1013" height="388" alt="image" src="https://github.com/user-attachments/assets/4fe6480a-5a7f-463a-b3e5-1a3ef2f1e6db" />
-
-<img width="612" height="439" alt="image" src="https://github.com/user-attachments/assets/9edcfdf7-6070-408f-9855-10b935205916" />
+- 服务端：Arch Linux 虚拟机 + MariaDB 13（192.168.31.200:3306）
+- 客户端：Windows 11 + IntelliJ IDEA Database 工具
