@@ -1,139 +1,73 @@
-# 索引笔记（八）：使用规则（二）——最左前缀法则
+# MySQL 学习笔记
 
-> 接《索引笔记（七）：验证索引效率》（实测加速比 718 倍）。
-> 本篇实测联合索引 idx_user_pro_age_sta 的使用规则，并挖出两个
-> 视频里没有的进阶知识点：**possible_keys vs key（能用≠值得用）**
-> 和 **覆盖索引扭转成本决策**。
-> 环境：MariaDB 13，demo.tb_user，实测 500,025 行。
+> 基于【黑马程序员 MySQL 教程】持续更新 · 过程笔记用 md 记录，专题总结出 PDF
 
-## 一、原理：联合索引是一栋"先 profession 再 age 再 status"的楼
+## 📚 目录结构
 
-idx_user_pro_age_sta 的 B+Tree 排序规则是层层嵌套的：
+| 目录 | 内容 |
+|---|---|
+| `00-环境搭建/` | MariaDB 远程开发环境文档（Arch 虚拟机 + IDEA 直连 + SSH 远程管理 + 故障排查手册） |
+| `01-基础篇-SQL/` | DDL / DML / DQL / 用户与权限管理 |
+| `02-基础篇-函数与约束/` | 字符串/数值/日期/流程函数；约束与外键 |
+| `03-基础篇-多表与事务/` | 内外连接、子查询、联合查询；事务操作 |
+| `04-进阶篇-索引/` | 索引概述、B-Tree/B+Tree 结构推导、MySQL 优化版 B+Tree、Hash 索引、聚簇/二级索引与回表、索引语法、索引使用规则、失效场景 |  ← 改动①：加了"索引使用规则"
+| `05-进阶篇-优化与锁/` | 性能分析（执行频次、慢查询日志、SHOW PROFILES、EXPLAIN 详解）、SQL 优化、锁、MVCC（学习中） |
+| `06-进阶篇-日志与管理/` | 日志、备份、管理（待学习） |
+| `07-体系结构与存储引擎/` | 体系结构、存储引擎对比与选型、事务隔离级别实验 |
 
-```
-先按 profession 排序
-profession 相同时，再按 age 排序
-age 也相同时，最后按 status 排序
-```
+## ✅ 学习进度
 
-只有确定了左边（前列）的值，右边（后列）的排序才有意义。
-"所有 age=23 的行"散落在每个 profession 段的内部，段间不连续——
-**跳过最左列，索引结构上就无从定位**（possible_keys 直接为 NULL）。
+### 基础篇
+- [x] DDL（数据库操作 / 表操作）
+- [x] DML（插入 / 更新删除）
+- [x] DQL（基础/条件/聚合/分组/排序/分页/执行顺序/案例）
+- [x] 函数（字符串 / 数值 / 日期 / 流程）
+- [x] 约束（六大约束 / 外键 / 删除更新行为）
+- [x] 多表查询（关系设计/内外连接/自连接/union/三类子查询/综合练习）
+- [x] 事务操作
+- [x] 用户与权限管理
 
-## 二、实验矩阵与实测结果（6 组 EXPLAIN）
+### 进阶篇
+- [x] 体系结构
+- [x] 存储引擎（特点对比 / 选型）
+- [x] 事务隔离级别（含实验报告）
+- [x] 索引概述
+- [x] B+Tree 结构详解（B-Tree → B+Tree 演进推导 + MySQL 优化版 + InnoDB 选型分析）
+- [x] Hash 索引（原理 / 三大特点 / Memory 与 InnoDB 自适应哈希）
+- [x] 聚簇索引与二级索引（选取规则 / 双树结构 / 回表与覆盖索引）
+- [x] 索引语法（四大语法 / 四类索引实操 / 唯一约束验证 / 联合索引形态 / FULLTEXT 中文局限 / EXPLAIN 初体验）
+- [x] 性能分析 - 查看执行频次（Com 计数器 / 读写比例判断 / GLOBAL 与 SESSION 区别 / LIKE 通配符）
+- [x] 性能分析 - 慢查询日志（参数配置 / Arch server.cnf / 权限与会话快照踩坑 / SLEEP 抓捕实验）
+- [x] 性能分析 - SHOW PROFILES 实战（存储过程造数 50 万行 / 阶段耗时拆解 / ORDER BY 索引消除 filesort / 优化前后 EXPLAIN 对比）
+- [x] 性能分析 - EXPLAIN 详解（12 字段 / 访问类型天梯 const→ALL 实测 / key_len 计算公式 / 联合索引最左前缀量化实证 54-49-NULL / MariaDB 无 system 级差异 / Select tables optimized away）
+- [x] 索引使用规则（一）— 验证索引效率（ALL/ref 实测对比 / 加速比 718 倍 / 重复索引踩坑 / 建索引 1.05s 开销观察）  ← 改动②：新增
+- [x] 索引使用规则（二）— 最左前缀法则（6 组实验 / key_len 三列逐字节对账 47-49-54 / possible_keys vs key / 占比 25% 成本决策实证 / 覆盖索引翻盘）  ← 改动③：新增
+- [x] 索引失效场景（一）- LIKE 通配符（`'abc%'` 走索引 range / `'%abc%'` 失效 ALL / 最左前缀原则实证 / ICP / key_len 计算）
+- [ ] 索引失效场景（二）- 其余失效场景（函数运算 / 隐式转换 / OR 连接非索引列 / NOT 与 IS NOT NULL / 数据分布影响）
+- [ ] SQL 优化（insert 优化 / 大分页优化 / join 优化）
+- [ ] 视图 / 触发器 / 存储过程
+- [ ] 锁 / InnoDB(MVCC) / 日志
 
-```sql
-EXPLAIN SELECT * FROM tb_user WHERE profession = '软件工程';                              -- 实验1
-EXPLAIN SELECT * FROM tb_user WHERE profession = '软件工程' AND age = 23;                 -- 实验2
-EXPLAIN SELECT * FROM tb_user WHERE profession = '软件工程' AND age = 23 AND status='6';  -- 实验3
-EXPLAIN SELECT * FROM tb_user WHERE age = 23;                                            -- 实验4
-EXPLAIN SELECT * FROM tb_user WHERE profession = '软件工程' AND status = '6';             -- 实验5
-EXPLAIN SELECT * FROM tb_user WHERE age = 23 AND profession = '软件工程' AND status='6';  -- 实验6
-```
+## 📄 专题笔记（PDF 精华）
 
-### 实测汇总表 ⭐
+1. [索引笔记（一）：索引概述](./04-进阶篇-索引/)
+2. [索引笔记（二）：B-Tree、B+Tree 与 InnoDB 的选择](./04-进阶篇-索引/)
+3. [索引笔记（三）：B+Tree 结构详解——从经典版到 MySQL 优化版](./04-进阶篇-索引/)
+4. [索引笔记（四）：Hash 索引——原理、特点与引擎支持](./04-进阶篇-索引/)
+5. [索引笔记（五）：聚簇索引、二级索引与回表](./04-进阶篇-索引/)
+6. [索引笔记（六）：索引语法——四大语法与四类索引实操](./04-进阶篇-索引/)
+7. [索引笔记（七）：使用规则（一）——验证索引效率（实测加速比 718 倍）](./04-进阶篇-索引/)  ← 改动④：新增
+8. [索引笔记（八）：使用规则（二）——最左前缀法则（含成本决策与覆盖索引翻盘实验）](./04-进阶篇-索引/)  ← 改动⑤：新增
+9. [性能分析笔记（一）：执行频次与慢查询日志](./05-进阶篇-优化与锁/)  ← 以下编号顺延
+10. [性能分析笔记（二）：SHOW PROFILES 与索引优化实战](./05-进阶篇-优化与锁/)
+11. [性能分析笔记（三）：EXPLAIN 详解与最左前缀量化实证](./05-进阶篇-优化与锁/)
+12. [索引失效笔记（一）：LIKE 通配符与最左前缀实证](./04-进阶篇-索引/)
+13. [事务隔离级别实验报告](./07-体系结构与存储引擎/)
+14. [MySQL 体系结构](./07-体系结构与存储引擎/)
+15. [存储引擎对比与选择](./07-体系结构与存储引擎/)
+16. [MariaDB 远程开发环境搭建](./00-环境搭建/)
 
-| 实验 | WHERE 条件 | type | possible_keys | key | key_len | rows |
-|---|---|---|---|---|---|---|
-| 1 | profession | **ALL** | idx_user_pro_age_sta | **NULL** | NULL | 497140 |
-| 2 | pro+age | ref | 同上 | 同上 | **49** | 4314 |
-| 3 | pro+age+status | ref | 同上 | 同上 | **54** | **1** |
-| 4 | **只有 age** | **ALL** | **NULL** | NULL | NULL | 497140 |
-| 5 | pro+status（断中间） | **ALL** | idx_user_pro_age_sta | **NULL** | NULL | 497140 |
-| 6 | 乱序三列 | ref | 同上 | 同上 | **54** | 1 |
-
-### 逐条解读
-
-**实验 2→3：逐列递进，key_len 精确对账**
-
-key_len 49 → 54，status 贡献 5 字节。真实表结构（SHOW CREATE TABLE）下的
-记账公式（utf8mb4，每字符 4 字节）：
-
-| 列 | 类型 | 计算 | key_len |
-|---|---|---|---|
-| profession | varchar(11) NULL | 11×4 + 2前缀 + 1 NULL | 47 |
-| age | tinyint unsigned NULL | 1 + 1 NULL | 2 |
-| status | char(1) NULL | 1×4 + 1 NULL（定长无前缀） | 5 |
-
-三列合计 47+2+5 = 54 ✅ 与实测完全一致。
-**过滤能力阶梯：4314 行（2 列）→ 1 行（3 列），每加一列掉一个数量级。**
-
-**实验 4 vs 实验 1/5：两种"不走索引"本质不同** ⭐⭐
-
-| | 实验 4（只查 age） | 实验 1/5（pro 或 pro+status） |
-|---|---|---|
-| possible_keys | **NULL**（结构上用不了） | **有值**（能用） |
-| key | NULL | NULL（**选择不用**） |
-| 本质 | 最左前缀失效，无从定位 | **成本决策：用了反而不划算** |
-
-**实验 6：SQL 编写顺序不影响索引使用**——WHERE 条件写成 age 在前
-也照样走满 3 列（key_len=54），优化器自动重排条件匹配索引列序。
-
-**实验 5：部分失效不是全失效**——status 断层后，索引只能用 profession
-一列，可筛选的行数和实验 1 一样多，同样触发成本决策放弃使用。
-
-## 三、成本决策实证：为什么优化器"能用却不用" ⭐⭐
-
-```sql
-SELECT COUNT(*) FROM tb_user;                                -- 500,025
-SELECT COUNT(*) FROM tb_user WHERE profession='软件工程';     -- 125,033
--- 占比 = 125033 / 500025 ≈ 25.0%（整整四分之一！）
-```
-
-走索引 vs 全表扫的真实代价：
-
-```
-走索引：125,033 次索引定位 + 125,033 次回表（随机 IO，最伤）
-全表扫：497,140 行顺序读一遍（顺序 IO，一次流过）
-```
-
-四分之一的行都要回表时，随机 IO 成本碾压顺序扫——**优化器放弃索引是
-正确决策，不是 bug**。视频（MySQL 8）里同样 SQL 走了 ref，因为
-数据分布不同。结论：**possible_keys 说"能不能用"，key 说"值不值得用"，
-两者都 NULL 才是索引彻底失效。**
-
-## 四、翻盘实验：改 SELECT 列表，执行计划反转 ⭐⭐（下一节引子）
-
-```sql
-EXPLAIN SELECT id, profession FROM tb_user WHERE profession = '软件工程';
-```
-
-```
-type=ref | key=idx_user_pro_age_sta | key_len=47 | Extra: Using index
-```
-
-同一条 WHERE，只把 SELECT \* 改成 id, profession——执行计划从 ALL 变 ref！
-原理：二级索引叶子节点本身就存着"索引列 + 主键 id"，这两个列索引里都有，
-**不需要回表**，125,033 条记录顺序扫完即出结果，随机 IO 消失，成本骤降。
-`Extra: Using index` 就是覆盖索引生效的标志——下一节专题展开。
-
-## 五、踩坑与附带发现
-
-1. **EXPLAIN 的 rows 是估算值**：覆盖索引实验估 260,898 行，实际
-   COUNT 125,033，高了约 2 倍——批量灌数后索引统计信息过时。
-   `ANALYZE TABLE tb_user;` 可刷新统计，让估算更准；
-2. **引号里的空格是隐患**：实验 6 曾写成 `' 软件工程'`（前导空格），
-   EXPLAIN 照样给出 rows=1 的"完美计划"——EXPLAIN 只规划不验证值，
-   真执行会返回空结果。字符串字面量要逐字符核对；
-3. **key_len 必须按真实表结构算**：按视频假设的 varchar(50)+int 估算
-   得 203/208/215，实际 varchar(11)+tinyint 是 47/49/54——
-   `SHOW CREATE TABLE` 是对账的唯一依据；
-4. 索引清单修正：phone（唯一）、idx_user_email（唯一）、idx_user_name2、
-   idx_user_pro_age_sta、idx_createtime。
-
-## 六、结论
-
-1. **最左前缀法则**：联合索引必须从最左列开始、连续匹配才逐列生效；
-   跳过最左列=完全用不了（possible_keys=NULL）；断中间列=部分失效；
-2. **possible_keys ≠ key**：能用但占比太高时优化器会算账后放弃——
-   回表随机 IO 是"值得用"的判断核心；
-3. **覆盖索引能扭转成本决策**：SELECT 只要索引里有的列，免回表，
-   ALL 也能变 ref；
-4. SQL 编写顺序不影响，索引列序才影响。
-
-## 📌 待办
-
-- [ ] ANALYZE TABLE 后重跑覆盖索引 EXPLAIN，观察 rows 估算修正
-- [ ] 下一节：范围查询（profession+age>xx 的 key_len 变化）
-- [ ] 覆盖索引专题（本篇第四节已埋引子）
-- [ ] 老账：《索引失效（一）》笔记文件补传；性能分析（四）3 条待补实验
+## 🧪 实验环境
+- 服务端：Arch Linux 虚拟机 + MariaDB 13（192.168.31.200:3306）
+- 客户端：Windows 11 + IntelliJ IDEA Database 工具
+- 远程管理：OpenSSH（sshd 已启用，ssh cxk@192.168.31.200）
